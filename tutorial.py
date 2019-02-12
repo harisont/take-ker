@@ -1,6 +1,6 @@
 # MNIST
 from keras.datasets import mnist
-from keras.utils import np_utils
+from keras.utils import np_utils, plot_model
 # simple linear stack of NN layers:
 from keras.models import Sequential 
 # "core" keras layers:
@@ -10,6 +10,8 @@ from keras.layers import Convolution2D, MaxPooling2D
 import numpy as np
 from matplotlib import pyplot as plt
 
+from keras import backend as K
+K.set_image_dim_ordering('th')
 
 np.random.seed(123) # to be able to reproduce results
 
@@ -64,7 +66,7 @@ model.add(MaxPooling2D(pool_size=(2,2))) # to reduce the numebr of parameters
 model.add(Dropout(0.25)) # to avoid overfitting
 
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
+model.add(Dense(128, activation='relu')) #
 model.add(Dropout(0.5))
 
 # output layer (10: number of output neurons)
@@ -75,8 +77,11 @@ model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 
+# plot the network
+plot_model(model, to_file='model.png')
+
 # TRAINING
-model.fit(x_train, y_train, batch_size=32, nb_epoch=10, verbose=1)
+model.fit(x_train, y_train, batch_size=32, epochs=10, verbose=1)
 
 # EVALUATING
 score = model.evaluate(x_test, x_test, verbose=0)
