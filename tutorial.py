@@ -1,4 +1,6 @@
-# MNIST
+# MNIST classification using Theano backend,
+# based on EliteDataScience tutorial
+
 from keras.datasets import mnist
 from keras.utils import np_utils, plot_model
 # simple linear stack of NN layers:
@@ -84,4 +86,4 @@ plot_model(model, to_file='model.png')
 model.fit(x_train, y_train, batch_size=32, epochs=10, verbose=1)
 
 # EVALUATING
-score = model.evaluate(x_test, x_test, verbose=0)
+score = model.evaluate(x_test, y_test, verbose=0)
