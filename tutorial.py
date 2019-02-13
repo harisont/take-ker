@@ -17,14 +17,12 @@ K.set_image_dim_ordering('th')
 
 np.random.seed(123) # to be able to reproduce results
 
-# LOADING DATA
+print("LOADING DATA...")
 # load pre-shuffled MNIST data into train and test sets
 # NB: x : input data = y : labels
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-
-# USELESS PRINTING STUFF
-# print the shape of the training and test set
+print("PRINTING DATASET INFO...")
 (n,w,h) = x_train.shape
 print ("Training set: {} {}x{} samples".format(n,w,h))
 (n,w,h) = x_test.shape
@@ -32,9 +30,9 @@ print ("    Test set: {} {}x{} samples".format(n,w,h))
 
 # plot one sample just to see how it looks like
 plt.imshow(x_train[0])
-# plt.show()
+plt.show()
 
-# PREPROCESSING INPUT DATA
+print("PREPROCESSING INPUT DATA...")
 # reshape data: (n, width, height) -> (n, depth, width, height)
 # (NB: this is Theano backend specific)
 x_train = x_train.reshape(x_train.shape[0], 1, 28, 28)
@@ -48,13 +46,13 @@ x_test  = x_test.astype('float32')
 x_train /= 255
 x_test  /= 255
 
-# PREPROCESSING CLASS LABELS
+print("PREPROCESSING CLASS LABELS...")
 # y_train.shape (and y_test.shape) should be 10 different classes (one per
 # digit), but they are actually encoded just as a 1-dimensional array, so:
 y_train = np_utils.to_categorical(y_train, 10)
 y_test = np_utils.to_categorical(y_test, 10)
 
-# DEFINING NETWORK ARCHITECTURE
+print("SETTING UP NETWORK ARCHITECTURE...")
 model = Sequential()
 
 # input layer
@@ -74,7 +72,7 @@ model.add(Dropout(0.5))
 # output layer (10: number of output neurons)
 model.add(Dense(10, activation='softmax')) 
 
-# COMPILING
+print("COMPILING MODEL...")
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
@@ -82,8 +80,10 @@ model.compile(loss='categorical_crossentropy',
 # plot the network
 plot_model(model, to_file='model.png')
 
-# TRAINING
+print("TRAINING MODEL...")
 model.fit(x_train, y_train, batch_size=32, epochs=10, verbose=1)
 
-# EVALUATING
-score = model.evaluate(x_test, y_test, verbose=0)
+print("EVALUATING MODEL...")
+score = model.evaluate(x_test, y_test, verbose=1)
+print ("    Loss: " + str(score[0]))
+print ("Accuracy: " + str(score[1]) + "%")
