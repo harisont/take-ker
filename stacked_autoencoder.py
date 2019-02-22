@@ -1,4 +1,4 @@
-# A basic autoencoder of MNIST digits based on a Keras blog tutorial,
+# A stacked autoencoder of MNIST digits based on a Keras blog tutorial,
 # available at: https://blog.keras.io/building-autoencoders-in-keras.html
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,10 +28,16 @@ encoding_dim = 32
 
 # input layer
 inputs = Input(shape=(784,))
-# hidden layer = output layer of the encoder
-encoded = Dense(encoding_dim, activation='relu')(inputs)
-# output layer
-decoded = Dense(784, activation='sigmoid')(encoded)
+
+# encoder
+encoded = Dense(128, activation='relu')(inputs)
+encoded = Dense(64, activation='relu')(encoded)
+encoded = Dense(32, activation='relu')(encoded)
+
+# decoder
+decoded = Dense(64, activation='relu')(encoded)
+decoded = Dense(128, activation='relu')(decoded)
+decoded = Dense(784, activation='sigmoid')(decoded)
 
 # creation of three separate models for the whole autoencoder,
 # the encoder and the decoder, so that they can be then used separately
@@ -40,8 +46,10 @@ autoencoder = Model(inputs, decoded)
 encoder = Model(inputs, encoded)
 
 decoder_input = Input(shape=(encoding_dim,))
-decoder_output = autoencoder.layers[-1]
-decoder = Model(decoder_input, decoder_output(decoder_input))
+decoder_output = autoencoder.layers[-3](decoder_input)
+decoder_output = autoencoder.layers[-2](decoder_output)
+decoder_output = autoencoder.layers[-1](decoder_output)
+decoder = Model(decoder_input, decoder_output)
 
 print_summary(autoencoder)
 
