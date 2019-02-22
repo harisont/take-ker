@@ -1,5 +1,5 @@
-# MNIST classification using Theano backend,
-# based on EliteDataScience tutorial
+# MNIST classification based on EliteDataScience tutorial, available at:
+# https://elitedatascience.com/keras-tutorial-deep-learning-in-python
 
 from keras.datasets import mnist
 from keras.utils import np_utils, plot_model
@@ -66,7 +66,7 @@ model.add(MaxPooling2D(pool_size=(2,2))) # to reduce the numebr of parameters
 model.add(Dropout(0.25)) # to avoid overfitting
 
 model.add(Flatten())
-model.add(Dense(128, activation='relu')) #
+model.add(Dense(128, activation='relu')) 
 model.add(Dropout(0.5))
 
 # output layer (10: number of output neurons)
